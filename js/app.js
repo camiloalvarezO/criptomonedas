@@ -1,5 +1,9 @@
 const criptomonedasSelect = document.querySelector('#criptomonedas')
 
+const consultarCriptomonedas = criptomonedas => new Promise(resolve => {
+    resolve(criptomonedas);
+})
+
 document.addEventListener('DOMContentLoaded', ()=> consultarAPI());
 
 
@@ -8,5 +12,12 @@ function consultarAPI(){
 
     fetch(url)
         .then(response => response.json())
-        .then(resultado => console.log(resultado))
+        .then(resultado => consultarCriptomonedas(resultado.Data))
+        .then(criptomonedas => selectCriptomonedas(criptomonedas));
+}
+
+function selectCriptomonedas(criptomonedas){
+    criptomonedas.forEach(cripto => {
+        console.log(cripto);
+    });
 }
