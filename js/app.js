@@ -21,3 +21,5 @@ function selectCriptomonedas(criptomonedas){
         console.log(cripto);
     });
 }
+
+// estoy haciendo lo de proyecto de grado jaja
