@@ -21,13 +21,23 @@ document.addEventListener('DOMContentLoaded', ()=> {
 })
 
 
-function consultarCriptomonedas(){
+async function consultarCriptomonedas(){
     const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD`;
 
-    fetch(url)
-        .then(response => response.json())
-        .then(resultado => obtenerCriptomonedas(resultado.Data))
-        .then(criptomonedas => selectCriptomonedas(criptomonedas));
+    // fetch(url)
+    //     .then(response => response.json())
+    //     .then(resultado => obtenerCriptomonedas(resultado.Data))
+    //     .then(criptomonedas => selectCriptomonedas(criptomonedas));
+
+    try {
+        const response = await fetch(url);
+        const resultado = await response.json();
+        const criptomonedas = await obtenerCriptomonedas(resultado.Data);
+        selectCriptomonedas(criptomonedas);
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 function selectCriptomonedas(criptomonedas){
@@ -62,6 +72,23 @@ function submitFormulario(e){
         return;
     }
     consultarAPI()
+    consultargitHub();
+
+}
+
+ function consultargitHub(){
+    const giturl = `https://github.jobs/positions.json?search=react`
+    const url =`https://api.allorigins.win/get?url=${ encodeURIComponent(giturl)}`;
+
+    axios.get(url)
+        .then(resultado => console.log(resultado))
+
+        // try {
+        //     const resultado = await axios.get(url);
+        //     console.log(resultado);
+        // } catch (error) {
+            
+        // }
 }
 
 function mostrarmensaje(mensaje){
@@ -93,20 +120,28 @@ function mostrarmensaje(mensaje){
     // }
 }
 
-function consultarAPI(){
+async function consultarAPI(){
     const {moneda,criptomoneda} = objMoneda;
 
     url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${moneda}&tsyms=${criptomoneda}`;
     mostrarspinner();
     // setTimeout(() => { // se mostraría el spinner, la consulta es muy rapida y no da tiempo
         
-        fetch(url)
-            .then(resultado=> resultado.json())
-            .then(respuesta => respuesta.RAW)
-            .then(cotizacion => mostrarcotizacionHTML(cotizacion[moneda][criptomoneda]))
+        // fetch(url)
+        //     .then(resultado=> resultado.json())
+        //     .then(cotizacion => mostrarcotizacionHTML(cotizacion.DISPLAY[moneda][criptomoneda]))
             
             limpiarpantalla();
     // }, 1000);
+
+    try {
+       const respuesta = await fetch(url)
+       const cotizacion = await respuesta.json();
+       mostrarcotizacionHTML(cotizacion.DISPLAY[moneda][criptomoneda])
+       
+    } catch (error) {
+        console.log(error);
+    }
             
 }
 
